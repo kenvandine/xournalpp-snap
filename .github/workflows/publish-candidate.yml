@@ -6,8 +6,21 @@ on:
       - stable
 
 jobs:
-  snap:
+  build-amd64:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: snapcore/action-build@v1
+        id: snapcraft
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ steps.snapcraft.outputs.snap }}
+          release: candidate
+
+  build-arm64:
+    runs-on: ubuntu-24.04-arm64
     steps:
       - uses: actions/checkout@v4
       - uses: snapcore/action-build@v1
